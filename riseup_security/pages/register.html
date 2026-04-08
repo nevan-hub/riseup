@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — RiseUp Security</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/glass.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+</head>
+<body>
+  <div id="navbar-wrapper"></div>
+
+  <section class="auth-page">
+    <div class="auth-bg"></div>
+    <div class="orb orb-1" style="opacity:0.4;"></div>
+    <div class="orb orb-2" style="opacity:0.3;"></div>
+
+    <div class="auth-card" style="max-width:520px;">
+      <div class="auth-logo">
+        <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+          <path d="M18 3L32 10V20C32 27.2 25.8 33.4 18 36C10.2 33.4 4 27.2 4 20V10L18 3Z"
+            fill="rgba(0,230,118,0.12)" stroke="#00E676" stroke-width="1.5"/>
+          <path d="M12 18L16 22L24 14" stroke="#00E676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        RiseUp Security
+      </div>
+
+      <h2 class="auth-title">Create Account</h2>
+      <p class="auth-subtitle">Register for access to your RiseUp Security client portal.</p>
+
+      <div id="auth-error" class="auth-error"></div>
+
+      <form id="register-form" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="reg-name">Full Name *</label>
+            <input type="text" id="reg-name" placeholder="Your full name" autocomplete="name" required />
+          </div>
+          <div class="form-group">
+            <label for="reg-company">Company / Organisation</label>
+            <input type="text" id="reg-company" placeholder="Optional" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-email">Email Address *</label>
+          <input type="email" id="reg-email" placeholder="you@company.co.za" autocomplete="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="reg-phone">Phone Number</label>
+          <input type="tel" id="reg-phone" placeholder="+27 000 000 0000" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="reg-password">Password *</label>
+            <input type="password" id="reg-password" placeholder="Min. 8 characters" autocomplete="new-password" required />
+          </div>
+          <div class="form-group">
+            <label for="reg-confirm">Confirm Password *</label>
+            <input type="password" id="reg-confirm" placeholder="Repeat password" autocomplete="new-password" required />
+          </div>
+        </div>
+
+        <!-- Password strength indicator -->
+        <div style="margin-bottom:20px;">
+          <div style="display:flex;gap:4px;margin-bottom:6px;">
+            <div class="pw-bar" style="flex:1;height:3px;border-radius:2px;background:var(--border-subtle);transition:background 0.3s;"></div>
+            <div class="pw-bar" style="flex:1;height:3px;border-radius:2px;background:var(--border-subtle);transition:background 0.3s;"></div>
+            <div class="pw-bar" style="flex:1;height:3px;border-radius:2px;background:var(--border-subtle);transition:background 0.3s;"></div>
+            <div class="pw-bar" style="flex:1;height:3px;border-radius:2px;background:var(--border-subtle);transition:background 0.3s;"></div>
+          </div>
+          <p id="pw-label" style="font-size:0.75rem;color:var(--text-muted);"></p>
+        </div>
+
+        <div style="margin-bottom:24px;display:flex;align-items:flex-start;gap:10px;">
+          <input type="checkbox" id="reg-terms" style="margin-top:3px;accent-color:var(--gold);" required />
+          <label for="reg-terms" style="font-size:0.82rem;color:var(--text-muted);cursor:pointer;">
+            I agree to the <a href="#" style="color:var(--gold);">Terms of Service</a> and <a href="#" style="color:var(--gold);">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="reg-btn" style="width:100%;justify-content:center;" data-label="Create Account">
+          <span>Create Account</span>
+        </button>
+      </form>
+
+      <div class="auth-switch" style="margin-top:20px;">
+        Already have an account? <a href="login.html">Sign in</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="../js/components.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    // Password strength meter
+    const pwInput = document.getElementById('reg-password');
+    const bars    = document.querySelectorAll('.pw-bar');
+    const pwLabel = document.getElementById('pw-label');
+
+    const levels = [
+      { min: 0,  color: 'transparent', label: '' },
+      { min: 1,  color: '#EF4444',     label: 'Weak' },
+      { min: 6,  color: '#F59E0B',     label: 'Fair' },
+      { min: 10, color: '#10B981',     label: 'Strong' },
+      { min: 14, color: '#00E676',     label: 'Very strong' },
+    ];
+
+    pwInput?.addEventListener('input', function () {
+      const val = this.value;
+      let score = 0;
+      if (val.length >= 8)   score++;
+      if (val.length >= 12)  score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      const filled = Math.min(Math.ceil(score * 4 / 5), 4);
+      const level  = score >= 5 ? 4 : score >= 3 ? 3 : score >= 2 ? 2 : score >= 1 ? 1 : 0;
+      const colors = ['transparent', '#EF4444', '#F59E0B', '#10B981', '#00E676'];
+
+      bars.forEach((b, i) => {
+        b.style.background = i < filled ? colors[level] : 'var(--border-subtle)';
+      });
+
+      pwLabel.textContent = ['', 'Weak', 'Fair', 'Strong', 'Very strong'][level] || '';
+      pwLabel.style.color = colors[level];
+    });
+  </script>
+</body>
+</html>

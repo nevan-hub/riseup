@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Dashboard — RiseUp Security</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/glass.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <style>
+    /* ── Dashboard-specific overrides ── */
+    body { overflow-x: hidden; }
+
+    .sidebar-section-label {
+      font-family: var(--font-display);
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 20px 24px 8px;
+    }
+
+    .dash-chart {
+      height: 140px;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      padding-top: 16px;
+    }
+
+    .chart-bar-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chart-bar {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(180deg, rgba(0,230,118,0.75), rgba(0,230,118,0.28));
+      transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .chart-bar:hover { background: linear-gradient(180deg, var(--gold), rgba(0,230,118,0.5)); }
+
+    .chart-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .activity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .quick-action {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: rgba(255,255,255,0.02);
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 0.88rem;
+    }
+
+    .quick-action:hover {
+      border-color: rgba(0,230,118,0.3);
+      background: rgba(0,230,118,0.06);
+    }
+
+    .quick-action-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--gold-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .report-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .report-row:last-child { border-bottom: none; }
+
+    .report-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+
+    .dash-welcome-banner {
+      background: linear-gradient(135deg, rgba(0,230,118,0.1), rgba(0,230,118,0.03));
+      border: 1px solid rgba(0,230,118,0.24);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-wrapper"></div>
+
+  <div class="dashboard-layout">
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" data-user-initial>D</div>
+        <h5 data-user-name>Demo Client</h5>
+        <span data-user-email style="font-size:0.78rem;color:var(--text-muted);">demo@riseupsecurity.co.za</span>
+      </div>
+
+      <p class="sidebar-section-label">Overview</p>
+      <ul class="sidebar-nav">
+        <li>
+          <a href="#" class="active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L22 7V13C22 18.5 17.5 23.4 12 25C6.5 23.4 2 18.5 2 13V7L12 2Z"/></svg>
+            My Services
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Reports
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            Analytics
+          </a>
+        </li>
+      </ul>
+
+      <p class="sidebar-section-label">Account</p>
+      <ul class="sidebar-nav">
+        <li>
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            Profile
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+            Invoices
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+          </a>
+        </li>
+        <li>
+          <a href="#" id="logout-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            Sign Out
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- ── Main Content ── -->
+    <main class="dashboard-main">
+
+      <!-- Welcome Banner -->
+      <div class="dash-welcome-banner fade-in">
+        <div>
+          <p style="font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">Client Portal</p>
+          <h2 id="dash-greeting" style="font-size:1.5rem;margin-bottom:4px;">Good morning, Demo.</h2>
+          <p style="font-size:0.88rem;">You have <strong style="color:var(--gold);">2 unread notifications</strong> and all services are currently active.</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;">
+          <a href="consultation.html" class="btn btn-outline" style="padding:10px 20px;font-size:0.82rem;">Book Consultation</a>
+          <a href="contact.html" class="btn btn-primary" style="padding:10px 20px;font-size:0.82rem;"><span>Request Support</span></a>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="dashboard-stats">
+        <div class="dash-stat fade-in">
+          <div class="dash-stat-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L22 7V13C22 18.5 17.5 23.4 12 25C6.5 23.4 2 18.5 2 13V7L12 2Z"/></svg>
+          </div>
+          <span class="dash-stat-value" id="stat-active">—</span>
+          <span class="dash-stat-label">Active Services</span>
+        </div>
+        <div class="dash-stat fade-in" style="animation-delay:0.08s;">
+          <div class="dash-stat-icon" style="background:rgba(239,68,68,0.1);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <span class="dash-stat-value" id="stat-alerts">—</span>
+          <span class="dash-stat-label">Alerts This Month</span>
+        </div>
+        <div class="dash-stat fade-in" style="animation-delay:0.16s;">
+          <div class="dash-stat-icon" style="background:rgba(96,165,250,0.1);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <span class="dash-stat-value" id="stat-reports">—</span>
+          <span class="dash-stat-label">Reports Generated</span>
+        </div>
+        <div class="dash-stat fade-in" style="animation-delay:0.24s;">
+          <div class="dash-stat-icon" style="background:rgba(34,197,94,0.1);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <span class="dash-stat-value" id="stat-days">—</span>
+          <span class="dash-stat-label">Days Protected</span>
+        </div>
+      </div>
+
+      <!-- Main Panels -->
+      <div class="dashboard-panels">
+        <!-- Left: Services + Activity chart -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- Active Services -->
+          <div class="dash-panel fade-in">
+            <h4>Active Services</h4>
+            <div class="service-row">
+              <div>
+                <div class="service-row-name">Armed Guard Deployment</div>
+                <div class="service-row-sub">Site: Sandton Office Park · 2 Guards</div>
+              </div>
+              <span class="badge badge-active">Active</span>
+            </div>
+            <div class="service-row">
+              <div>
+                <div class="service-row-name">24/7 Threat Monitoring</div>
+                <div class="service-row-sub">Cyber · SIEM · Last alert: 3 days ago</div>
+              </div>
+              <span class="badge badge-active">Active</span>
+            </div>
+            <div class="service-row">
+              <div>
+                <div class="service-row-name">Quarterly Security Audit</div>
+                <div class="service-row-sub">Next review: May 2026</div>
+              </div>
+              <span class="badge badge-pending">Upcoming</span>
+            </div>
+            <div class="service-row">
+              <div>
+                <div class="service-row-name">Firewall Management</div>
+                <div class="service-row-sub">Cyber · Last update: 7 days ago</div>
+              </div>
+              <span class="badge badge-active">Active</span>
+            </div>
+          </div>
+
+          <!-- Incident Chart -->
+          <div class="dash-panel fade-in">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <h4>Incident Activity</h4>
+              <span style="font-size:0.75rem;color:var(--text-muted);">Last 7 months</span>
+            </div>
+            <div class="dash-chart" id="incident-chart">
+              <!-- Bars inserted by JS -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Notifications + Quick Actions + Reports -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <!-- Notifications -->
+          <div class="dash-panel fade-in">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <h4>Notifications</h4>
+              <span style="font-size:0.72rem;color:var(--gold);cursor:pointer;">Mark all read</span>
+            </div>
+            <div class="notif-item">
+              <div class="notif-dot gold"></div>
+              <div>
+                <div class="notif-text">Monthly security report for March 2026 is ready for download.</div>
+                <div class="notif-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-dot" style="background:#EF4444;"></div>
+              <div>
+                <div class="notif-text">Unusual login attempt detected on monitored network — auto-blocked.</div>
+                <div class="notif-time">Yesterday, 11:42 PM</div>
+              </div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-dot green"></div>
+              <div>
+                <div class="notif-text">Firewall rules updated successfully — all endpoints secured.</div>
+                <div class="notif-time">3 days ago</div>
+              </div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-dot blue"></div>
+              <div>
+                <div class="notif-text">Your next scheduled patrol review is confirmed for 12 April 2026.</div>
+                <div class="notif-time">4 days ago</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="dash-panel fade-in">
+            <h4>Quick Actions</h4>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+              <a href="contact.html" class="quick-action">
+                <div class="quick-action-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.23h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.29 6.29l1.75-1.75a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                Request Emergency Support
+              </a>
+              <a href="consultation.html" class="quick-action">
+                <div class="quick-action-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                Schedule a Review Meeting
+              </a>
+              <a href="#" class="quick-action">
+                <div class="quick-action-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                </div>
+                Download Latest Report
+              </a>
+              <a href="pricing.html" class="quick-action">
+                <div class="quick-action-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                Upgrade Service Package
+              </a>
+            </div>
+          </div>
+
+          <!-- Recent Reports -->
+          <div class="dash-panel fade-in">
+            <h4>Recent Reports</h4>
+            <div class="report-row">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div class="report-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:0.85rem;font-weight:500;">March 2026 Incident Report</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Physical Security · PDF</div>
+                </div>
+              </div>
+              <a href="#" style="font-size:0.75rem;color:var(--gold);">Download</a>
+            </div>
+            <div class="report-row">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div class="report-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:0.85rem;font-weight:500;">Q1 Threat Intelligence Summary</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Cybersecurity · PDF</div>
+                </div>
+              </div>
+              <a href="#" style="font-size:0.75rem;color:var(--gold);">Download</a>
+            </div>
+            <div class="report-row">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div class="report-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L22 7V13C22 18.5 17.5 23.4 12 25C6.5 23.4 2 18.5 2 13V7L12 2Z"/></svg>
+                </div>
+                <div>
+                  <div style="font-size:0.85rem;font-weight:500;">Firewall Audit — February 2026</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Cyber · PDF</div>
+                </div>
+              </div>
+              <a href="#" style="font-size:0.75rem;color:var(--gold);">Download</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Chat -->
+  <button class="chat-fab" id="chat-fab" aria-label="Chat"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+  <div class="chat-panel" id="chat-panel">
+    <div class="chat-header"><div class="chat-header-left"><div class="chat-status"></div><div><h5>RiseUp Support</h5><span>Online</span></div></div><button class="chat-close" id="chat-close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="chat-messages" id="chat-messages"><div class="chat-msg bot">Hi! Need help with your account or services?</div></div>
+    <div class="chat-input-row"><input class="chat-input" id="chat-input" placeholder="Type a message..."/><button class="chat-send" id="chat-send"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
+  </div>
+
+  <script src="../js/components.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/dashboard.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    // Render incident chart
+    (function() {
+      const chart  = document.getElementById('incident-chart');
+      if (!chart) return;
+
+      const data   = [3, 1, 5, 2, 4, 2, 1];
+      const months = ['Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+      const maxVal = Math.max(...data);
+
+      data.forEach((val, i) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'chart-bar-wrap';
+
+        const bar   = document.createElement('div');
+        bar.className = 'chart-bar';
+        bar.style.height = '0px';
+        bar.title = `${val} incident${val !== 1 ? 's' : ''}`;
+
+        const label = document.createElement('span');
+        label.className = 'chart-label';
+        label.textContent = months[i];
+
+        wrap.appendChild(bar);
+        wrap.appendChild(label);
+        chart.appendChild(wrap);
+
+        // Animate in
+        setTimeout(() => {
+          bar.style.height = `${(val / maxVal) * 110}px`;
+        }, 300 + i * 80);
+      });
+    })();
+  </script>
+</body>
+</html>
